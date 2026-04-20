@@ -1,14 +1,52 @@
-import React,{Component, useState} from 'react'
-import '../css/sample.css'
+
+import React,{Component, useState, useEffect} from 'react'
+import style from '../css/Sample.module.css'
+import style1 from '../css/HomePage.module.css'
+// import styled from 'styled-components'
+import styled from '@emotion/styled'
+import { css } from '@emotion/react'
+import axios from 'axios'
 
 function Sample(props) {
     const [name,setName]=useState("Devendra")
     const [age,setAge]=useState(20)
+    const [loading, setLoading] = useState(false)
 
+    useEffect(()=>{
+        
+        console.log("Component mounted")
+        return ()=>{
+            console.log("Component unmounted")
+        }
+    },[name])
+
+    useEffect(()=>{
+        async function fetchingData(){
+            const response=await fetch("https://dummyjson.com/products",{
+                method:"GET"
+            })
+            const data=await response.json()
+            console.log(data)
+        }
+
+        async function fetchingData(){
+            try{
+                setLoading(true)
+                const response=await axios.get("https://dummyjson.com/products/")
+            console.log(response.data)
+            setLoading(false)
+            }catch(error){
+                console.log(error)
+            }
+            }
+        
+        fetchingData()
+        },[])
     
 
   return (
     <div>
+        {loading?<h1>Loading...</h1>:<h1></h1>}
       <h2>Trending topics</h2>
       <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Rem quae maiores, nobis laboriosam non commodi quia consequuntur vitae dolore facere deserunt quas recusandae iste harum in, provident aut reprehenderit temporibus.</p>
       <h3>{name}</h3>
@@ -22,9 +60,35 @@ function Sample(props) {
     >
         Count is {props.count}
     </button>
+    <div>
+        <Button >First</Button>
+        <Button green>Second</Button>
+        <button css={buttonStyle}>Third</button>
+        <button className='bg-red-500 text-white w-20 h-8'>Fourth</button>
+    </div>
     </div>
   )
 }
+
+export default Sample
+
+const buttonStyle=css`
+    background-color: orange;
+    color: white;
+    width: 100px;
+    height: 35px;
+    border-radius: 10px;
+    border:none
+`
+
+const Button=styled.button`
+    background-color: ${(props) => (props.green ? "green" : "red")};
+    color: white;
+    width: 100px;
+    height: 35px;
+    border-radius: 10px;
+    border:none
+`
 
 class Sample extends Component {
     constructor(props){
@@ -66,15 +130,12 @@ class Sample extends Component {
                 }}>Name Change</button>
             <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Rem quae maiores, nobis laboriosam non commodi quia consequuntur vitae dolore facere deserunt quas recusandae iste harum in, provident aut reprehenderit temporibus.</p>
             <button
-                className="counter"
+                style={{backgroundColor:"red"}}
                 onClick={() => this.props.setCount((count) => count + 1)}
             >
                 Count is {this.props.count}
             </button>
-            <div>
-                <button style={{backgroundColor:"indigo", color:"white", width:"100px", height:"30px"}}>First</button>
-                <button style={{backgroundColor:"green", color:"white", width:"100px", height:"30px"}}>Second</button>
-            </div>
+            
             </div>
         )
     }
